@@ -25,6 +25,10 @@ def aggregate_customer_features(df):
         std_amount=("Amount", "std"),
         transaction_count=("Amount", "count")
     ).reset_index()
+
+    # Fill NaNs in std_amount with 0 (since std dev of 1 transaction = 0)
+    agg_df["std_amount"] = agg_df["std_amount"].fillna(0)
+
     return agg_df
 
 # Step 2: Extract Time-Based Features
