@@ -16,8 +16,26 @@ from data_processing import (
 # Load sample raw data for testing
 @pytest.fixture(scope="module")
 def raw_data():
-    return pd.read_csv("data/raw/data.csv")
-
+    return pd.DataFrame([
+        {
+            "TransactionId": "TransactionId_76871",
+            "CustomerId": "CustomerId_4406",
+            "Amount": 1000,
+            "TransactionStartTime": "2018-11-15T02:18:49Z"
+        },
+        {
+            "TransactionId": "TransactionId_380",
+            "CustomerId": "CustomerId_988",
+            "Amount": 20000,
+            "TransactionStartTime": "2018-11-15T02:19:08Z"
+        },
+        {
+            "TransactionId": "TransactionId_26203",
+            "CustomerId": "CustomerId_4683",
+            "Amount": 500,
+            "TransactionStartTime": "2018-11-15T02:44:21Z"
+        },
+    ])
 def test_aggregate_customer_features(raw_data):
     agg_df = aggregate_customer_features(raw_data)
     assert "total_amount" in agg_df.columns
