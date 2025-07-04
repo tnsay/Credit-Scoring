@@ -4,22 +4,26 @@ import mlflow.pyfunc
 
 app = FastAPI(
     title="Credit Risk Predictor API",
-    description="API to assess credit risk based on customer transaction behavior",
-    version="1.0.0"
+    description=(
+        "API to assess credit risk based on customer "
+        "transaction behavior"
+    ),
+    version="1.0.0",
 )
 
 # Load model from MLflow Registry
 model_name = "RandomForest_model"
-#model_uri = "models:/RandomForest_model/2"
+# model_uri = "models:/RandomForest_model/2"
 
 
-print(f"🔍 Loading model from: local storage exported_model dir")
+print("🔍 Loading model from: local storage exported_model dir")
 model = mlflow.pyfunc.load_model("exported_model")
 
 
 @app.get("/")
 def root():
     return {"message": "Credit Risk Prediction API"}
+
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict(data: CustomerData):

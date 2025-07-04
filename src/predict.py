@@ -5,6 +5,7 @@ import os
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
+
 # Load input data
 def load_input(input_path: str) -> pd.DataFrame:
     try:
@@ -15,6 +16,7 @@ def load_input(input_path: str) -> pd.DataFrame:
     except Exception as e:
         print(f"❌ Failed to load input data: {e}")
         sys.exit(1)
+
 
 # Load model from the registry
 def load_model(model_name: str, stage: str = "Staging"):
@@ -27,29 +29,32 @@ def load_model(model_name: str, stage: str = "Staging"):
         print(f"❌ Failed to load model: {e}")
         sys.exit(1)
 
+
 # Run inference
 def predict(model, input_df: pd.DataFrame):
     try:
         # Save CustomerId for output if it exists
-        customer_ids = input_df["CustomerId"] if "CustomerId" in input_df.columns else None
-        
+        customer_ids = (input_df["CustomerId"]
+                        if "CustomerId" in input_df.columns else None)
+
         # Drop columns not used in training
-        input_features = input_df.drop(columns=["CustomerId", "is_high_risk"], errors="ignore")
-        
+        input_features = input_df.drop(
+            columns=["CustomerId", "is_high_risk"], errors="ignore"
+        )
+
         # Predict
         preds = model.predict(input_features)
-        
+
         # Return DataFrame with CustomerId and prediction
         if customer_ids is not None:
-            return pd.DataFrame({
-                "CustomerId": customer_ids,
-                "prediction": preds
-            })
+            return pd.DataFrame(
+                {"CustomerId": customer_ids, "prediction": preds})
         else:
             return pd.DataFrame({"prediction": preds})
     except Exception as e:
         print(f"❌ Prediction failed: {e}")
         sys.exit(1)
+
 
 # Save predictions
 def save_output(pred_df, output_path: str):
@@ -60,15 +65,32 @@ def save_output(pred_df, output_path: str):
         print(f"❌ Failed to save predictions: {e}")
         sys.exit(1)
 
+
 # Main logic
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Run inference using MLflow model registry")
-    parser.add_argument("--input", type=str, required=True, help="Path to input CSV file")
-    parser.add_argument("--output", type=str, required=True, help="Path to output CSV file")
-    parser.add_argument("--model-name", type=str, default="RandomForest_model", help="Name of the registered model")
-    parser.add_argument("--stage", type=str, default="Staging", help="Model registry stage (e.g., Staging or Production)")
+    parser = argparse.ArgumentParser(
+        description="Run inference using MLflow model registry"
+    )
+    parser.add_argument(
+        "--input", type=str, required=True, help="Path to input CSV file"
+    )
+    parser.add_argument(
+        "--output", type=str, required=True, help="Path to output CSV file"
+    )
+    parser.add_argument(
+        "--model-name",
+        type=str,
+        default="RandomForest_model",
+        help="Name of the registered model",
+    )
+    parser.add_argument(
+        "--stage",
+        type=str,
+        default="Staging",
+        help="Model registry stage (e.g., Staging or Production)",
+    )
 
     args = parser.parse_args()
 

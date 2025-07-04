@@ -1,12 +1,17 @@
 import pandas as pd
-import numpy as np
 import mlflow
 import mlflow.sklearn
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_auc_score,
+)
 
 # Load the prepared data
 data = pd.read_csv("data/processed/train_ready.csv")
@@ -24,7 +29,9 @@ X_train, X_test, y_train, y_test = train_test_split(
 models = {
     "LogisticRegression": LogisticRegression(max_iter=1000),
     "RandomForest": RandomForestClassifier(n_estimators=100, random_state=42),
-    "GradientBoosting": GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, random_state=42)
+    "GradientBoosting": GradientBoostingClassifier(
+        n_estimators=100, learning_rate=0.1, random_state=42
+    ),
 }
 
 # Start MLflow experiment
@@ -44,7 +51,7 @@ for model_name, model in models.items():
         f1 = f1_score(y_test, y_pred)
         roc_auc = roc_auc_score(y_test, y_proba)
 
-        # Log parameters & metrics (cast metrics to float to avoid YAML serialization issues)
+        # cast metrics to float to avoid YAML serialization issues
         mlflow.log_param("model_name", model_name)
         mlflow.log_metric("accuracy", float(accuracy))
         mlflow.log_metric("precision", float(precision))
@@ -56,7 +63,7 @@ for model_name, model in models.items():
         mlflow.sklearn.log_model(
             sk_model=model,
             artifact_path="model",
-            registered_model_name=f"{model_name}_model"
+            registered_model_name=f"{model_name}_model",
         )
 
         print(f"✅ {model_name} logged to MLflow with ROC-AUC: {roc_auc:.4f}")
