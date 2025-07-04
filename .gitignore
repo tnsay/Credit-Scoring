@@ -1,4 +1,9 @@
-data/
+data/**
+# But allow DVC tracking files
+!data/**/*.dvc
+!data/
+!data/raw/
+
 __pycache__/
 .env
 *.pyc
