@@ -25,6 +25,12 @@ jobs:
 
       - name: Run flake8
         run: flake8 src/
+      
+      - name: Install DVC
+        run: pip install dvc[gdrive]  
+        
+      - name: Pull data files from DVC remote
+        run: dvc pull
 
       - name: Run tests
         run: pytest tests/
