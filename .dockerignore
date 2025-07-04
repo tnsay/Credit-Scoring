@@ -1,0 +1,33 @@
+# Byte-compiled / optimized Python files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.env
+.env.*
+
+# Git-related
+.git/
+.gitignore
+
+# Jupyter notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# Logs and runtime files
+*.log
+*.tmp
+
+# Docker-specific
+Dockerfile
+docker-compose.yml
+
+# CI/CD
+.github/
+
+# Data folders
+data/
+notebooks/
+mlruns/
